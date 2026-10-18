@@ -1,0 +1,15 @@
+Tiburones 
+5 
+G G P E G
+Cóndores 
+4 
+E E E E
+Panteras 
+5 
+P P P P P
+Leones 
+3 
+G E G
+Halcones 
+4 
+G P G E

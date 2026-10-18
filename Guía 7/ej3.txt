@@ -1,0 +1,7 @@
+3 4       { Cuadrante 1, distancia = 5 }
+-2 5      { Cuadrante 2, distancia ≈ 5.39 }
+-4 -3     { Cuadrante 3, distancia = 5 }
+6 -2      { Cuadrante 4, distancia ≈ 6.32 }
+0 0       { Centro, distancia = 0 }
+5 0       { Eje X, distancia = 5 }
+0 -3      { Eje Y, distancia = 3 }

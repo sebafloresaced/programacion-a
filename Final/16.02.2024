@@ -1,0 +1,103 @@
+Program Final;
+Type
+str10 = string[10];
+str20 = string[20];
+str8 = string[8];
+str3 = string[3];
+
+RE = record
+legajo:str10;
+nombre:str20;
+sueldo:real;
+end;
+AE = file of RE;
+
+RH = record
+legajo:str10;
+fecha:str8;
+cantHoras:word;
+codigo:str3;
+end;
+AH = file of RH;
+
+RP = record
+codigo:str3;
+Descripcion:str20;
+valorHora:word;
+end;
+AP = file of RP;
+
+VC = array[0..9] of str3;
+
+RQ = record
+codigo:str3;
+Descripcion:str20;
+cantHoras:word;
+MontoTotal:real;
+end;
+VQ = array[0..9] of RQ;
+
+procedure CargaCodigos(var ArchP:AP; var Codigos:VC; var N:byte);
+var
+Pozo:RP;
+Begin
+reset(archp);
+N:=0;
+while not eof(archp) do
+  Begin
+  read(archp,pozo);
+  N:=N+1;
+  Codigos[N]:=pozo.codigo;
+  end;
+close(archp);
+end;
+
+function BuscarCodigo(Codigos:VC;N:byte;Cod:str3):byte;
+var
+i:byte;
+Begin
+i:=0;
+while (i<N) and (Cod<>Codigos[i]) do
+  i:=i+1;
+if Cod = Codigos[i] then
+  BuscarCodigo:=i
+else
+  BuscarCodigo:=10;
+end;
+
+procedure ActualizarArchivo(var ArchP:AP;var ArchE:AE; var ArchH:AH;var Quincena:VQ; var Q:byte; codigos:VC; N:byte);
+var
+ArchT:AE; Empleado,RTemp:RE; HorasTrabajo:RH; PozoPetrolero:RP;
+NoTrabajaron,ErrorLegajo:byte; LegajoAct:str10; AcumSueldo:real;
+Begin
+Q:=0; NoTrabajaron:=0; ErrorLegajo:=0;
+reset(ArchP); reset(ArchE); reset(archH); rewrtie(ArchT);
+read(archE,Empleado); read(archH, HorasTrabajo);
+while not eof(archH) or not eof(ArchE) do
+  Begin
+  LegajoAct:=HorasTrabajo.legajo;
+  if LegajoAct < Empleado.legajo then
+    Begin
+    ErrorLegajo:=ErrorLegajo+1;
+    while HorasTrabajo.legajo = LegajoAct do
+      read(archH,HorasTrabajo);
+    end
+  else
+    Begin
+    AcumSueldo:=0;
+    while HorasTrabajo.legajo = LegajoAct do
+      Begin
+      seek(ArchP,BuscarCodigo(Codigos,N,HorasTrabajo.codigo));
+      read(ArchP,PozoPetrolero);
+      AcumSueldo:=AcumSueldo + HorasTrabajo.cantHoras*PozoPetrolero.valorHora;
+      if copy(HorasTrabajo.fecha,7,2)<=15 then
+        Begin
+        Quincena.codigo:=HorasTrabajo.codigo;
+      read(ArchH,HorasTrabajo);
+      end;
+    if AcumSueldo=0 then
+      NoTrabajaron:=NoTrabajaron+1;
+    
+
+  
+    
